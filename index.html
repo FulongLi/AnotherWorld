@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnotherWorld - Life Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌍 AnotherWorld</h1>
+            <p class="subtitle">Life Simulation System</p>
+        </header>
+
+        <div id="start-screen" class="screen active">
+            <div class="start-content">
+                <h2>Welcome to Life Simulator</h2>
+                <p>Experience a complete life journey from birth to old age</p>
+                <button id="start-btn" class="btn btn-primary">Start New Life</button>
+            </div>
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="character-info">
+                    <h2 id="character-name">Name</h2>
+                    <div class="age-display">Age: <span id="current-age">0</span> years old</div>
+                    <div class="mbti-display">MBTI: <span id="mbti-type">-</span></div>
+                </div>
+                <div class="attributes-panel">
+                    <h3>Attributes</h3>
+                    <div class="attributes-grid">
+                        <div class="attr-item">
+                            <span class="attr-label">Intelligence</span>
+                            <div class="attr-bar">
+                                <div class="attr-fill" id="attr-intelligence" style="width: 50%"></div>
+                            </div>
+                            <span class="attr-value" id="val-intelligence">50</span>
+                        </div>
+                        <div class="attr-item">
+                            <span class="attr-label">Charm</span>
+                            <div class="attr-bar">
+                                <div class="attr-fill" id="attr-charm" style="width: 50%"></div>
+                            </div>
+                            <span class="attr-value" id="val-charm">50</span>
+                        </div>
+                        <div class="attr-item">
+                            <span class="attr-label">Health</span>
+                            <div class="attr-bar">
+                                <div class="attr-fill" id="attr-health" style="width: 50%"></div>
+                            </div>
+                            <span class="attr-value" id="val-health">50</span>
+                        </div>
+                        <div class="attr-item">
+                            <span class="attr-label">Luck</span>
+                            <div class="attr-bar">
+                                <div class="attr-fill" id="attr-luck" style="width: 50%"></div>
+                            </div>
+                            <span class="attr-value" id="val-luck">50</span>
+                        </div>
+                        <div class="attr-item">
+                            <span class="attr-label">Wealth</span>
+                            <div class="attr-bar">
+                                <div class="attr-fill" id="attr-wealth" style="width: 0%"></div>
+                            </div>
+                            <span class="attr-value" id="val-wealth">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-main">
+                <div class="timeline-container">
+                    <h3>Life Timeline</h3>
+                    <div id="timeline" class="timeline"></div>
+                </div>
+
+                <div class="event-container">
+                    <div id="current-event" class="event-card">
+                        <h3 id="event-title">Event Title</h3>
+                        <p id="event-description">Event description...</p>
+                        <div id="event-choices" class="choices">
+                            <!-- Choice buttons will be dynamically generated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button id="next-year-btn" class="btn btn-secondary">Next Year</button>
+                <button id="pause-btn" class="btn btn-secondary">Pause</button>
+                <button id="restart-btn" class="btn btn-secondary">Restart</button>
+            </div>
+        </div>
+
+        <div id="end-screen" class="screen">
+            <div class="end-content">
+                <h2>Life Summary</h2>
+                <div id="life-summary"></div>
+                <button id="restart-end-btn" class="btn btn-primary">Start Over</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
