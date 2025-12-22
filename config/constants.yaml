@@ -1,0 +1,21 @@
+# Simulation Constants
+
+simulation:
+  max_age: 100
+  max_actions_per_year: 2
+
+person:
+  initial_health_range: [0.5, 0.9]
+  initial_energy: 0.8
+  initial_stress: 0.2
+
+world:
+  base_tech_level: 0.3
+  tech_growth_rate: 0.01
+  economic_cycle_period: 10
+
+events:
+  burnout_threshold: 0.8
+  career_breakthrough_skill: 0.7
+  social_collapse_loneliness: 0.9
+

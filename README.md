@@ -1,64 +1,170 @@
-# AnotherWorld - Life Simulator
+# Life Trajectory Simulator (LTS)
 
-A web-based life simulation game that lets you experience a complete life journey from birth to old age.
+**Version**: v1.0  
+**Status**: MVP - Runnable  
+**Language**: Python 3.11+
+
+A single-person, single-run life trajectory generation system that simulates a complete life from birth to death, with player choices at key stages, macro-environmental constraints, and structured life summaries.
+
+## ⚠️ Important Note
+
+> This system does **NOT** provide real-life advice.  
+> Its output is for thought experiments and narrative generation only.
 
 ## Features
 
-- 🌍 **Complete Life Simulation**: Experience a full life journey from age 0 to 100
-- 📊 **Attribute System**: Five core attributes - Intelligence, Charm, Health, Luck, and Wealth
-- 🎯 **Decision System**: Make choices at key moments that influence your life trajectory
-- 📅 **Timeline Recording**: Record important events and choices throughout your life
-- 🎲 **Random Events**: Different life events triggered at various age stages
-- 📈 **Visualization**: Real-time display of attribute changes and life trajectory
-- 🧠 **MBTI Personality System**: 16 personality types that influence your choices and outcomes
+- **Complete Life Simulation**: From birth to death (0-100 years)
+- **Player Choices**: Make decisions at key life stages
+- **World State**: Dynamic economic cycles, technology, social mobility
+- **Life Events**: Automatic detection of significant life events
+- **Narrative Generation**: Comprehensive life summaries and highlights
+- **Reproducible**: Seed-based random number generation
 
-## Life Stages
+## Installation
 
-- **Childhood** (0-12 years): Family background, early education, personality formation
-- **Teenage** (13-18 years): Academics, social life, interest development
-- **Young Adult** (19-30 years): Career choices, relationships, financial independence
-- **Middle Age** (31-50 years): Career development, family responsibilities, health management
-- **Elderly** (51+ years): Retirement, health, life reflection
+```bash
+# Install dependencies
+pip install -r requirements.txt
+```
 
-## MBTI System
+## Quick Start
 
-The game includes a complete MBTI (Myers-Briggs Type Indicator) personality system:
+```bash
+# Run a random life simulation
+python main.py
 
-- **16 Personality Types**: Each character is assigned one of 16 MBTI types
-- **Personality Influence**: Your MBTI type affects how choices impact your attributes
-- **Type Descriptions**: Each type comes with a description of personality traits
-- **Choice Modifiers**: Social, creative, logical, and structured choices are modified based on your personality type
+# Follow the prompts to customize or use defaults
+```
 
-### MBTI Types Included:
-- INTJ, INTP, ENTJ, ENTP (Analysts)
-- INFJ, INFP, ENFJ, ENFP (Diplomats)
-- ISTJ, ISFJ, ESTJ, ESFJ (Sentinels)
-- ISTP, ISFP, ESTP, ESFP (Explorers)
+## Project Structure
 
-## How to Use
+```
+/lts
+ ├── main.py                 # CLI entry point
+ ├── config/
+ │    └── constants.yaml     # Configuration constants
+ ├── models/
+ │    ├── person.py          # Person data models
+ │    └── world.py           # World state model
+ ├── engine/
+ │    ├── simulator.py       # Main simulation loop
+ │    ├── decision_engine.py # Action generation
+ │    └── transition_engine.py # State transitions
+ ├── narrative/
+ │    ├── life_events.py     # Event detection
+ │    └── summary_generator.py # Summary generation
+ ├── utils/
+ │    ├── rng.py             # Random number generation
+ │    └── helpers.py         # Utility functions
+ └── output/
+      └── run_*.json         # Simulation results
+```
 
-1. Simply open `index.html` in your web browser
-2. Click "Start New Life" button
-3. Make choices at key moments in your life
-4. Click "Next Year" to advance time
-5. View your life summary at the end
+## Core Concepts
 
-## Technology Stack
+### Birth Profile (Immutable)
+- Birth year, region, family class
+- Parents' education, family stability
+- Genetic health, cognitive potential
 
-- Pure frontend implementation (HTML + CSS + JavaScript)
-- No server required, runs directly in the browser
-- Responsive design, supports mobile devices
+### Person State (Mutable)
+- Health, mental health, energy, stress
+- Education level, skills (depth/width)
+- Income, wealth, occupation
+- Social capital, loneliness
 
-## Future Plans
+### Personality (Slow-changing)
+- Openness, conscientiousness
+- Risk preference, social drive
+- Resilience
 
-- [ ] Add more random events
-- [ ] Implement career system
-- [ ] Add relationship system
-- [ ] Implement achievement system
-- [ ] Add data statistics and charts
-- [ ] Support save and load game progress
-- [ ] More detailed MBTI-based event variations
+### World State
+- Economic cycle (sine wave)
+- Technology level (increasing)
+- Social mobility, inequality
+- Conflict risk
 
-## Start Playing
+### Actions
+- **STUDY**: Increase education and skills
+- **WORK**: Earn income, build career
+- **REST**: Recover energy, reduce stress
+- **MOVE**: Change location/career
+- **RISK**: Take risks (entrepreneurship)
+- **RELATION**: Build relationships
 
-Just open `index.html` in your browser to start experiencing life!
+## Example Output
+
+```json
+{
+  "summary": {
+    "summary": "This was a life that spanned 78 years...",
+    "highlights": [
+      "High Education Achievement",
+      "Career Breakthroughs",
+      "Strong Social Network"
+    ],
+    "statistics": {
+      "total_events": 12,
+      "event_by_category": {
+        "health": 2,
+        "career": 3,
+        "social": 1,
+        "economic": 1,
+        "milestone": 5
+      }
+    }
+  }
+}
+```
+
+## Life Events
+
+Events are automatically detected based on state thresholds:
+
+| Event | Condition |
+|-------|-----------|
+| Burnout | stress > 0.8 |
+| Career Breakthrough | skill_depth > 0.7 & economic_cycle > 0 |
+| Social Isolation | loneliness > 0.9 |
+| Economic Hardship | wealth < 0 & economic_cycle < -0.5 |
+| Educational Achievement | education_level >= 0.8 |
+| Health Crisis | health < 0.3 |
+
+## Development
+
+### Running Tests
+```bash
+# TODO: Add pytest tests
+pytest
+```
+
+### Code Structure
+- **Models**: Data structures (dataclasses)
+- **Engine**: Core simulation logic
+- **Narrative**: Event detection and summary generation
+- **Utils**: Helper functions and RNG
+
+## Version Roadmap
+
+| Version | Content |
+|---------|---------|
+| v1.0 | Single-person complete life (current) |
+| v1.1 | Narrative optimization |
+| v2.0 | Multiple parallel lives |
+| v3.0 | Novel/game integration |
+
+## License
+
+This project is for educational and experimental purposes.
+
+## Contributing
+
+This is an MVP implementation. Contributions welcome for:
+- More sophisticated event detection
+- Enhanced narrative generation
+- Additional action types
+- World state variations
+
+---
+
+**Remember**: This is a simulation, not real-life advice. Use responsibly.
