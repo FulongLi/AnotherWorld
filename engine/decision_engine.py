@@ -54,7 +54,7 @@ class DecisionEngine:
         
         # RISK - Available if personality allows and economic conditions are good
         if personality.risk_preference > 0.5:
-            if world.economic_cycle > 0 or person.wealth > 0.3:
+            if world is None or world.economic_cycle > 0 or person.wealth > 0.3:
                 if person.age < 60:
                     available.append(Action.RISK)
         

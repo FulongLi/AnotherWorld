@@ -16,6 +16,7 @@ A single-person, single-run life trajectory generation system that simulates a c
 - **Complete Life Simulation**: From birth to death (0-100 years)
 - **Player Choices**: Make decisions at key life stages
 - **World State**: Dynamic economic cycles, technology, social mobility
+- **Pareto Principle Integration**: 80/20 rule affects wealth, opportunities, and social mobility
 - **Life Events**: Automatic detection of significant life events
 - **Narrative Generation**: Comprehensive life summaries and highlights
 - **Reproducible**: Seed-based random number generation
@@ -83,6 +84,11 @@ python main.py
 - Technology level (increasing)
 - Social mobility, inequality
 - Conflict risk
+- **Pareto Principle (80/20 Rule)**: Integrated throughout
+  - 80% of wealth held by top 20% of population
+  - 80% of opportunities concentrated in top 20%
+  - 80% of technology benefits captured by top 20%
+  - Only 20% can achieve significant social mobility
 
 ### Actions
 - **STUDY**: Increase education and skills
@@ -116,6 +122,38 @@ python main.py
   }
 }
 ```
+
+## Pareto Principle (80/20 Rule)
+
+The simulation incorporates the Pareto Principle throughout:
+
+### Wealth Distribution
+- **Top 20% (Elite)**: Receive 4x wealth multiplier (80% of wealth / 20% of people)
+- **Bottom 80%**: Share remaining 20% of wealth (0.25x multiplier)
+- Inequality amplifies this effect over time
+
+### Opportunity Access
+- **Top 20%**: 4x opportunity multiplier (80% of opportunities)
+- **Bottom 80%**: 0.25x opportunity multiplier (20% of opportunities)
+- Affects career moves, risk-taking, and social mobility
+
+### Technology Benefits
+- **Top 20%**: Full tech benefits + bonus (capture 80% of tech gains)
+- **Bottom 80%**: Reduced tech benefits (share 20% of tech gains)
+- Technology growth increases inequality
+
+### Social Mobility
+- Only 20% of population can achieve significant upward mobility
+- Higher inequality = lower mobility (harder to break into elite)
+- Birth class matters more in high-inequality worlds
+
+### Person Score Calculation
+Elite status determined by:
+- Birth family class (weighted by inequality level)
+- Education level
+- Skill depth
+- Social capital
+- Current wealth
 
 ## Life Events
 

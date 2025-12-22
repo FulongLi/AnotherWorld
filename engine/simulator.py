@@ -59,7 +59,7 @@ class LifeSimulator:
             
             # Apply actions
             previous_state = copy.deepcopy(person)
-            self.transition_engine.apply_actions(person, world, personality, actions)
+            self.transition_engine.apply_actions(person, world, personality, actions, birth)
             
             # Check for events
             self.event_detector.check_events(person, world, previous_state)
