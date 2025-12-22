@@ -40,26 +40,40 @@ python main.py
 ## Project Structure
 
 ```
-/lts
- ├── main.py                 # CLI entry point
- ├── config/
- │    └── constants.yaml     # Configuration constants
- ├── models/
- │    ├── person.py          # Person data models
- │    └── world.py           # World state model
- ├── engine/
- │    ├── simulator.py       # Main simulation loop
- │    ├── decision_engine.py # Action generation
- │    └── transition_engine.py # State transitions
- ├── narrative/
- │    ├── life_events.py     # Event detection
+AnotherWorld/
+ ├── main.py                 # CLI entry point (general model)
+ ├── test_run.py             # Quick test script
+ ├── models/                 # Data models
+ │    ├── person.py          # Person models (birth, state, personality)
+ │    ├── world.py           # General world model (with Pareto Principle)
+ │    ├── world_china.py     # China world model (6 eras, 4 cities)
+ │    └── family_policy.py   # Family planning policy model
+ ├── engine/                 # Core engines
+ │    ├── simulator.py       # General life simulator
+ │    ├── simulator_china.py # China-specific simulator
+ │    ├── decision_engine.py # Decision/action engine
+ │    └── transition_engine.py # State transition engine
+ ├── narrative/              # Narrative generation
+ │    ├── life_events.py     # Life event detection
  │    └── summary_generator.py # Summary generation
- ├── utils/
- │    ├── rng.py             # Random number generation
- │    └── helpers.py         # Utility functions
- └── output/
+ ├── utils/                  # Utilities
+ │    ├── rng.py             # Random number generator
+ │    └── helpers.py         # Helper functions
+ ├── config/                 # Configuration
+ │    └── constants.yaml     # Simulation constants
+ ├── examples/               # Demos and examples
+ │    ├── china_demo.py      # China model demonstration
+ │    ├── family_policy_demo.py # Family policy demo
+ │    └── pareto_demo.py     # Pareto principle demo
+ ├── docs/                   # Documentation
+ │    ├── CHINA_WORLD_MODEL.md
+ │    ├── FAMILY_POLICY_MODULE.md
+ │    └── PARETO_PRINCIPLE.md
+ └── output/                 # Results
       └── run_*.json         # Simulation results
 ```
+
+**See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for detailed structure overview.**
 
 ## Core Concepts
 
