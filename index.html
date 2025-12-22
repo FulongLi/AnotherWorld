@@ -27,6 +27,14 @@
                     <h2 id="character-name">Name</h2>
                     <div class="age-display">Age: <span id="current-age">0</span> years old</div>
                     <div class="mbti-display">MBTI: <span id="mbti-type">-</span></div>
+                    <div class="world-info">
+                        <h4>World Context</h4>
+                        <div id="era-name" class="era-display">-</div>
+                        <div class="world-stats">
+                            <span>Economy: <span id="world-economy">-</span></span>
+                            <span>Tech: <span id="world-tech">-</span></span>
+                        </div>
+                    </div>
                 </div>
                 <div class="attributes-panel">
                     <h3>Attributes</h3>
@@ -71,9 +79,28 @@
             </div>
 
             <div class="game-main">
-                <div class="timeline-container">
-                    <h3>Life Timeline</h3>
-                    <div id="timeline" class="timeline"></div>
+                <div class="left-panel">
+                    <div class="state-panel">
+                        <h3>Life States</h3>
+                        <div class="state-grid">
+                            <div class="state-item">
+                                <strong>Education:</strong> <span id="state-education">0</span>
+                            </div>
+                            <div class="state-item">
+                                <strong>Career Level:</strong> <span id="state-career">0</span>
+                            </div>
+                            <div class="state-item">
+                                <strong>Reputation:</strong> <span id="state-reputation">50</span>
+                            </div>
+                            <div class="state-item">
+                                <strong>Relationships:</strong> <span id="state-relationship">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timeline-container">
+                        <h3>Life Timeline</h3>
+                        <div id="timeline" class="timeline"></div>
+                    </div>
                 </div>
 
                 <div class="event-container">
@@ -103,6 +130,10 @@
         </div>
     </div>
 
+    <script src="world-era.js"></script>
+    <script src="life-state.js"></script>
+    <script src="behavior-choice.js"></script>
+    <script src="narrative.js"></script>
     <script src="game.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-// Core game system
+// Core game system - Integrates all modules
 class LifeSimulator {
     constructor() {
         this.character = null;
@@ -7,6 +7,13 @@ class LifeSimulator {
         this.lifeEvents = [];
         this.isPaused = false;
         this.currentEvent = null;
+        
+        // Initialize modules
+        this.worldEra = new WorldEraModule();
+        this.lifeState = new LifeStateEngine();
+        this.behaviorChoice = new BehaviorChoiceModule();
+        this.narrative = new NarrativeGenerationModule();
+        
         this.init();
     }
 
@@ -33,15 +40,13 @@ class LifeSimulator {
 
     // Generate MBTI personality type
     generateMBTI() {
-        // MBTI has 4 dimensions, each with 2 options
-        const extraversion = Math.random() > 0.5 ? 'E' : 'I'; // Extraversion vs Introversion
-        const sensing = Math.random() > 0.5 ? 'S' : 'N'; // Sensing vs Intuition
-        const thinking = Math.random() > 0.5 ? 'T' : 'F'; // Thinking vs Feeling
-        const judging = Math.random() > 0.5 ? 'J' : 'P'; // Judging vs Perceiving
+        const extraversion = Math.random() > 0.5 ? 'E' : 'I';
+        const sensing = Math.random() > 0.5 ? 'S' : 'N';
+        const thinking = Math.random() > 0.5 ? 'T' : 'F';
+        const judging = Math.random() > 0.5 ? 'J' : 'P';
         
         const mbtiType = extraversion + sensing + thinking + judging;
         
-        // MBTI type descriptions
         const mbtiDescriptions = {
             'INTJ': 'The Architect - Strategic, independent, and decisive',
             'INTP': 'The Thinker - Innovative, logical, and curious',
@@ -73,45 +78,16 @@ class LifeSimulator {
         };
     }
 
-    // Get MBTI-based choice modifier
-    getMBTIModifier(choice, mbti) {
-        let modifier = 1.0;
-        
-        // Extraversion affects social choices
-        if (choice.social) {
-            modifier *= mbti.dimensions.extraversion ? 1.2 : 0.9;
-        }
-        
-        // Intuition affects creative/abstract choices
-        if (choice.creative) {
-            modifier *= mbti.dimensions.sensing ? 0.9 : 1.2;
-        }
-        
-        // Thinking affects logical choices
-        if (choice.logical) {
-            modifier *= mbti.dimensions.thinking ? 1.2 : 0.9;
-        }
-        
-        // Judging affects structured choices
-        if (choice.structured) {
-            modifier *= mbti.dimensions.judging ? 1.2 : 0.9;
-        }
-        
-        return modifier;
-    }
-
     // Create new character
     createCharacter() {
-        const familyWealth = Math.random() * 100; // Family wealth affects initial attributes
+        const familyWealth = Math.random() * 100;
         const mbti = this.generateMBTI();
         
-        // Adjust initial attributes based on MBTI
         let intelligence = 30 + Math.random() * 40 + (familyWealth > 50 ? 10 : 0);
         let charm = 30 + Math.random() * 40 + (familyWealth > 60 ? 10 : 0);
         
-        // MBTI adjustments
         if (mbti.dimensions.extraversion) charm += 5;
-        if (!mbti.dimensions.sensing) intelligence += 5; // Intuitive types tend to be more abstract thinkers
+        if (!mbti.dimensions.sensing) intelligence += 5;
         
         return {
             name: this.generateName(),
@@ -119,16 +95,13 @@ class LifeSimulator {
             intelligence: Math.min(100, intelligence),
             charm: Math.min(100, charm),
             health: 50 + Math.random() * 30 + (familyWealth > 70 ? 10 : 0),
-            luck: 20 + Math.random() * 60, // 20-80
+            luck: 20 + Math.random() * 60,
             wealth: familyWealth,
-            education: 0, // Education level
-            career: null,
-            relationship: null,
+            mbti: mbti,
             family: {
                 wealth: familyWealth,
                 education: Math.random() * 100
-            },
-            mbti: mbti
+            }
         };
     }
 
@@ -138,6 +111,12 @@ class LifeSimulator {
         this.currentAge = 0;
         this.lifeEvents = [];
         this.isPaused = false;
+        
+        // Reset modules
+        this.worldEra = new WorldEraModule();
+        this.lifeState = new LifeStateEngine();
+        this.behaviorChoice = new BehaviorChoiceModule();
+        this.narrative = new NarrativeGenerationModule();
         
         document.getElementById('start-screen').classList.remove('active');
         document.getElementById('game-screen').classList.add('active');
@@ -151,16 +130,35 @@ class LifeSimulator {
     updateDisplay() {
         if (!this.character) return;
 
+        // Character info
         document.getElementById('character-name').textContent = this.character.name;
         document.getElementById('current-age').textContent = this.currentAge;
         document.getElementById('mbti-type').textContent = this.character.mbti.type;
 
-        // Update attribute bars
+        // Attributes
         this.updateAttribute('intelligence', this.character.intelligence);
         this.updateAttribute('charm', this.character.charm);
         this.updateAttribute('health', this.character.health);
         this.updateAttribute('luck', this.character.luck);
         this.updateAttribute('wealth', Math.min(this.character.wealth, 100));
+
+        // World/Era info
+        const eraInfo = this.worldEra.getEraDescription();
+        document.getElementById('era-name').textContent = eraInfo.name;
+        document.getElementById('world-economy').textContent = Math.round(eraInfo.state.economy);
+        document.getElementById('world-tech').textContent = Math.round(eraInfo.state.technology);
+
+        // Life states
+        const state = this.lifeState.getStateSummary();
+        document.getElementById('state-education').textContent = Math.round(state.individual.education);
+        document.getElementById('state-career').textContent = Math.round(state.individual.careerLevel);
+        document.getElementById('state-reputation').textContent = Math.round(state.social.reputation);
+        
+        let relationshipStatus = state.relationship.romantic.status;
+        if (state.relationship.children.count > 0) {
+            relationshipStatus += `, ${state.relationship.children.count} child(ren)`;
+        }
+        document.getElementById('state-relationship').textContent = relationshipStatus;
     }
 
     updateAttribute(name, value) {
@@ -176,8 +174,16 @@ class LifeSimulator {
         this.currentAge++;
         this.character.age = this.currentAge;
 
-        // Natural attribute changes
+        // Update world state
+        this.worldEra.updateWorldState(this.currentAge);
+
+        // Natural aging
         this.naturalAging();
+
+        // Update life states
+        this.lifeState.updateIndividualState(this.character, this.currentAge);
+        this.lifeState.updateSocialState(this.character, { social: false }, this.worldEra.worldState);
+        this.lifeState.updateRelationshipState(this.currentAge, { social: false, romantic: false }, this.character);
 
         // Check if life ended
         if (this.currentAge >= this.maxAge || this.character.health <= 0) {
@@ -192,7 +198,6 @@ class LifeSimulator {
 
     // Natural aging
     naturalAging() {
-        // Health decreases with age
         if (this.currentAge > 40) {
             this.character.health -= (this.currentAge - 40) * 0.5;
         }
@@ -200,7 +205,6 @@ class LifeSimulator {
             this.character.health -= 1;
         }
 
-        // Intelligence may increase (experience) or decrease (aging)
         if (this.currentAge < 30) {
             this.character.intelligence += Math.random() * 2;
         } else if (this.currentAge > 70) {
@@ -210,12 +214,25 @@ class LifeSimulator {
 
     // Trigger event
     triggerEvent() {
+        // Get age-based events
         const ageGroup = this.getAgeGroup();
-        const events = this.getEventsForAge(ageGroup);
+        const ageEvents = this.getEventsForAge(ageGroup);
         
-        if (events.length === 0) return;
+        // Get behavior choices
+        const context = {
+            age: this.currentAge,
+            state: this.lifeState.getStateSummary(),
+            worldState: this.worldEra.worldState,
+            mbti: this.character.mbti,
+            attributes: this.character
+        };
+        const behaviorChoices = this.behaviorChoice.generateBehaviorChoices(context);
+        
+        // Combine and select event
+        const allEvents = [...ageEvents];
+        if (allEvents.length === 0) return;
 
-        const event = events[Math.floor(Math.random() * events.length)];
+        const event = allEvents[Math.floor(Math.random() * allEvents.length)];
         this.currentEvent = event;
         this.displayEvent(event);
     }
@@ -229,7 +246,7 @@ class LifeSimulator {
         return 'elderly';
     }
 
-    // Get events for age group
+    // Get events for age group (keeping original events)
     getEventsForAge(ageGroup) {
         const allEvents = {
             childhood: [
@@ -392,30 +409,53 @@ class LifeSimulator {
         const choicesContainer = document.getElementById('event-choices');
         choicesContainer.innerHTML = '';
 
-        event.choices.forEach((choice, index) => {
+        event.choices.forEach((choice) => {
             const button = document.createElement('button');
             button.className = 'choice-btn';
             button.textContent = choice.text;
             
-            // Apply MBTI modifier to choice effects
+            // Apply MBTI modifier
+            const mbtiModifier = this.getMBTIModifier(choice, this.character.mbti);
+            const worldModifier = this.worldEra.getWorldModifier(this.getEventType(choice));
+            
             const modifiedChoice = { ...choice };
-            if (this.character && this.character.mbti) {
-                const modifier = this.getMBTIModifier(choice, this.character.mbti);
-                const modifiedEffect = {};
-                Object.keys(choice.effect).forEach(attr => {
-                    modifiedEffect[attr] = Math.round(choice.effect[attr] * modifier);
-                });
-                modifiedChoice.effect = modifiedEffect;
-            }
+            const modifiedEffect = {};
+            Object.keys(choice.effect).forEach(attr => {
+                let value = choice.effect[attr];
+                value *= mbtiModifier;
+                if (attr === 'wealth' || attr === 'education') {
+                    value *= worldModifier;
+                }
+                modifiedEffect[attr] = value;
+            });
+            modifiedChoice.effect = modifiedEffect;
             
             button.addEventListener('click', () => this.makeChoice(modifiedChoice));
             choicesContainer.appendChild(button);
         });
     }
 
+    // Get MBTI modifier
+    getMBTIModifier(choice, mbti) {
+        let modifier = 1.0;
+        if (choice.social) modifier *= mbti.dimensions.extraversion ? 1.2 : 0.9;
+        if (choice.creative) modifier *= mbti.dimensions.sensing ? 0.9 : 1.2;
+        if (choice.logical) modifier *= mbti.dimensions.thinking ? 1.2 : 0.9;
+        if (choice.structured) modifier *= mbti.dimensions.judging ? 1.2 : 0.9;
+        return modifier;
+    }
+
+    // Get event type for world modifier
+    getEventType(choice) {
+        if (choice.effect.education) return 'education';
+        if (choice.effect.wealth) return 'economic';
+        if (choice.effect.careerLevel) return 'career';
+        return 'general';
+    }
+
     // Make choice
     makeChoice(choice) {
-        // Apply choice effects
+        // Apply choice effects to character attributes
         Object.keys(choice.effect).forEach(attr => {
             if (this.character[attr] !== undefined) {
                 this.character[attr] += choice.effect[attr];
@@ -423,12 +463,21 @@ class LifeSimulator {
             }
         });
 
+        // Apply effects to life state
+        this.lifeState.applyChoiceEffects(choice, this.character);
+
         // Record event
         this.lifeEvents.push({
             age: this.currentAge,
             event: this.currentEvent.title,
-            choice: choice.text
+            choice: choice.text,
+            type: choice.type || 'general'
         });
+
+        // Record behavior
+        if (choice.type) {
+            this.behaviorChoice.recordBehavior(choice, this.currentAge);
+        }
 
         this.addTimelineItem(this.currentAge, this.currentEvent.title, choice.text);
         this.updateDisplay();
@@ -465,50 +514,74 @@ class LifeSimulator {
         document.getElementById('life-summary').innerHTML = summary;
     }
 
-    // Generate life summary
+    // Generate life summary using narrative module
     generateLifeSummary() {
-        const finalWealth = Math.round(this.character.wealth);
-        const finalIntelligence = Math.round(this.character.intelligence);
-        const finalCharm = Math.round(this.character.charm);
-        const finalHealth = Math.round(this.character.health);
+        const state = this.lifeState.getStateSummary();
+        const summary = this.narrative.generateLifeSummary(
+            this.character,
+            state,
+            { ...this.character, age: this.currentAge },
+            this.lifeEvents,
+            this.worldEra
+        );
 
-        let summary = `
+        let html = `
             <div class="summary-item">
-                <strong>Name:</strong> ${this.character.name}
+                <strong>Name:</strong> ${summary.overview.name}
             </div>
             <div class="summary-item">
-                <strong>Age at Death:</strong> ${this.currentAge} years old
+                <strong>Age at Death:</strong> ${summary.overview.age} years old
             </div>
             <div class="summary-item">
-                <strong>MBTI Type:</strong> ${this.character.mbti.type} - ${this.character.mbti.description}
+                <strong>MBTI Type:</strong> ${summary.overview.mbti} - ${this.character.mbti.description}
             </div>
             <div class="summary-item">
                 <strong>Final Attributes:</strong><br>
-                Intelligence: ${finalIntelligence} | Charm: ${finalCharm} | Health: ${finalHealth} | Wealth: ${finalWealth}
+                Intelligence: ${summary.overview.attributes.intelligence} | 
+                Charm: ${summary.overview.attributes.charm} | 
+                Health: ${summary.overview.attributes.health} | 
+                Wealth: ${summary.overview.attributes.wealth}
             </div>
             <div class="summary-item">
-                <strong>Life Events:</strong><br>
-                ${this.lifeEvents.slice(0, 10).map(e => `Age ${e.age}: ${e.event}`).join('<br>')}
+                <strong>Era:</strong> ${summary.eraContext.primaryEra} - ${summary.eraContext.description}
             </div>
         `;
 
-        // Evaluation
-        let evaluation = '';
-        if (finalWealth > 80 && finalIntelligence > 70) {
-            evaluation = 'You lived a successful and wealthy life!';
-        } else if (finalHealth > 80 && finalCharm > 70) {
-            evaluation = 'You lived a healthy and happy life!';
-        } else if (finalIntelligence > 80) {
-            evaluation = 'You lived a wise and intellectual life!';
-        } else if (this.currentAge > 80) {
-            evaluation = 'You lived a long life!';
-        } else {
-            evaluation = 'You lived an ordinary but authentic life.';
+        if (summary.achievements.length > 0) {
+            html += `
+                <div class="summary-item">
+                    <strong>Achievements:</strong><br>
+                    ${summary.achievements.join(', ')}
+                </div>
+            `;
         }
 
-        summary += `<div class="summary-item"><strong>Life Evaluation:</strong> ${evaluation}</div>`;
+        if (summary.keyMoments.length > 0) {
+            html += `
+                <div class="summary-item">
+                    <strong>Key Life Moments:</strong><br>
+                    ${summary.keyMoments.map(m => `Age ${m.age}: ${m.title}`).join('<br>')}
+                </div>
+            `;
+        }
 
-        return summary;
+        html += `
+            <div class="summary-item">
+                <strong>Relationships:</strong><br>
+                Romantic: ${summary.relationships.romantic.status} (Quality: ${summary.relationships.romantic.quality})<br>
+                Children: ${summary.relationships.children.count}<br>
+                Friends: ${summary.relationships.friendships.count} (Quality: ${summary.relationships.friendships.quality})
+            </div>
+            <div class="summary-item">
+                <strong>Legacy:</strong><br>
+                ${summary.legacy.join('<br>')}
+            </div>
+            <div class="summary-item">
+                <strong>Life Evaluation:</strong> ${summary.overview.evaluation}
+            </div>
+        `;
+
+        return html;
     }
 
     // Restart
@@ -525,3 +598,4 @@ let game;
 window.addEventListener('DOMContentLoaded', () => {
     game = new LifeSimulator();
 });
+
