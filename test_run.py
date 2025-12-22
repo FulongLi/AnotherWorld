@@ -40,19 +40,19 @@ def test_simulation():
     assert 'summary' in result
     assert 'events' in result
     
-    print(f"✓ Simulation completed successfully!")
-    print(f"✓ Final age: {result['person']['age']}")
-    print(f"✓ Total events: {len(result['events'])}")
-    print(f"✓ Summary generated: {len(result['summary']['summary']) > 0}")
+    print(f"[OK] Simulation completed successfully!")
+    print(f"[OK] Final age: {result['person']['age']}")
+    print(f"[OK] Total events: {len(result['events'])}")
+    print(f"[OK] Summary generated: {len(result['summary']['summary']) > 0}")
     
-    print("\nTest passed! ✓")
+    print("\nTest passed! [OK]")
     return True
 
 if __name__ == "__main__":
     try:
         test_simulation()
     except Exception as e:
-        print(f"✗ Test failed: {e}")
+        print(f"[FAIL] Test failed: {e}")
         import traceback
         traceback.print_exc()
         sys.exit(1)

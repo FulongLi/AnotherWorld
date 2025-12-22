@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生轨迹模拟器 - Life Trajectory Simulator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 人生轨迹模拟器</h1>
+            <p class="subtitle">基于三层架构的人生预测系统</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Input Panel -->
+            <div class="panel input-panel">
+                <h2>📝 初始化参数</h2>
+                
+                <form id="simulationForm">
+                    <!-- Birth Profile Section -->
+                    <div class="section">
+                        <h3>出生档案</h3>
+                        <div class="form-group">
+                            <label for="birth_year">出生年份</label>
+                            <input type="number" id="birth_year" name="birth_year" value="1990" min="1949" max="2020" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="region">地区</label>
+                            <select id="region" name="region">
+                                <option value="Urban">城市</option>
+                                <option value="Suburban">郊区</option>
+                                <option value="Rural">农村</option>
+                                <option value="Metropolitan">大都市</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="family_class">家庭阶层 (0-1)</label>
+                            <input type="range" id="family_class" name="family_class" min="0" max="1" step="0.1" value="0.5">
+                            <span class="value-display" id="family_class_value">0.5</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="parents_education">父母教育水平 (0-1)</label>
+                            <input type="range" id="parents_education" name="parents_education" min="0" max="1" step="0.1" value="0.5">
+                            <span class="value-display" id="parents_education_value">0.5</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="family_stability">家庭稳定性 (0-1)</label>
+                            <input type="range" id="family_stability" name="family_stability" min="0" max="1" step="0.1" value="0.5">
+                            <span class="value-display" id="family_stability_value">0.5</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="genetic_health">遗传健康 (0-1)</label>
+                            <input type="range" id="genetic_health" name="genetic_health" min="0" max="1" step="0.1" value="0.7">
+                            <span class="value-display" id="genetic_health_value">0.7</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cognitive_potential">认知潜力 (0-1)</label>
+                            <input type="range" id="cognitive_potential" name="cognitive_potential" min="0" max="1" step="0.1" value="0.6">
+                            <span class="value-display" id="cognitive_potential_value">0.6</span>
+                        </div>
+                    </div>
+
+                    <!-- Personality Section -->
+                    <div class="section">
+                        <h3>性格特质</h3>
+                        <div class="form-group">
+                            <label for="openness">开放性 (0-1)</label>
+                            <input type="range" id="openness" name="openness" min="0" max="1" step="0.1" value="0.5">
+                            <span class="value-display" id="openness_value">0.5</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="conscientiousness">尽责性 (0-1)</label>
+                            <input type="range" id="conscientiousness" name="conscientiousness" min="0" max="1" step="0.1" value="0.5">
+                            <span class="value-display" id="conscientiousness_value">0.5</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="risk_preference">风险偏好 (0-1)</label>
+                            <input type="range" id="risk_preference" name="risk_preference" min="0" max="1" step="0.1" value="0.5">
+                            <span class="value-display" id="risk_preference_value">0.5</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="social_drive">社交驱动 (0-1)</label>
+                            <input type="range" id="social_drive" name="social_drive" min="0" max="1" step="0.1" value="0.5">
+                            <span class="value-display" id="social_drive_value">0.5</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="resilience">韧性 (0-1)</label>
+                            <input type="range" id="resilience" name="resilience" min="0" max="1" step="0.1" value="0.5">
+                            <span class="value-display" id="resilience_value">0.5</span>
+                        </div>
+                    </div>
+
+                    <!-- Simulation Settings -->
+                    <div class="section">
+                        <h3>模拟设置</h3>
+                        <div class="form-group">
+                            <label for="country">国家</label>
+                            <select id="country" name="country">
+                                <option value="China">中国</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="city">城市</label>
+                            <select id="city" name="city">
+                                <option value="beijing">北京</option>
+                                <option value="shanghai">上海</option>
+                                <option value="shenzhen">深圳</option>
+                                <option value="guangzhou">广州</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="max_age">最大年龄</label>
+                            <input type="number" id="max_age" name="max_age" value="80" min="1" max="100" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="simulateBtn">
+                        <span class="btn-text">🚀 开始模拟</span>
+                        <span class="btn-loading" style="display: none;">模拟中...</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Results Panel -->
+            <div class="panel results-panel" id="resultsPanel" style="display: none;">
+                <h2>📊 模拟结果</h2>
+                
+                <div id="summarySection" class="result-section">
+                    <h3>人生总结</h3>
+                    <div id="summaryText" class="summary-text"></div>
+                </div>
+
+                <div id="statsSection" class="result-section">
+                    <h3>关键指标</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">最终年龄</div>
+                            <div class="stat-value" id="finalAge">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">最终财富</div>
+                            <div class="stat-value" id="finalWealth">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">最终收入</div>
+                            <div class="stat-value" id="finalIncome">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">教育水平</div>
+                            <div class="stat-value" id="finalEducation">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">健康状况</div>
+                            <div class="stat-value" id="finalHealth">-</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">压力水平</div>
+                            <div class="stat-value" id="finalStress">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="eventsSection" class="result-section">
+                    <h3>人生事件</h3>
+                    <div id="eventsList" class="events-list"></div>
+                </div>
+
+                <div id="contextSection" class="result-section">
+                    <h3>环境信息</h3>
+                    <div id="contextInfo" class="context-info"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
+

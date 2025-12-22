@@ -37,6 +37,21 @@ python main.py
 # Follow the prompts to customize or use defaults
 ```
 
+## Testing
+
+```bash
+# Run basic test
+python test_run.py
+
+# Run all tests (Windows)
+run_tests.bat
+
+# Run all tests (Linux/Mac)
+chmod +x run_tests.sh && ./run_tests.sh
+```
+
+**See [TESTING_GUIDE.md](TESTING_GUIDE.md) for detailed testing instructions.**
+
 ## Project Structure
 
 ```
