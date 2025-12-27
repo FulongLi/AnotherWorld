@@ -41,9 +41,10 @@ class LifeSimulatorV2:
         person = self._initialize_person(birth)
         
         # Initialize base world state (universal economic laws)
+        # Use 1949 as base_year for China model compatibility
         base_world = BaseWorldState(
             year=birth.birth_year,
-            base_year=birth.birth_year
+            base_year=1949
         )
         
         # Initialize country model (if not already initialized)

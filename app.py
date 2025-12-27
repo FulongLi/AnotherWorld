@@ -100,18 +100,24 @@ def simulate():
 
 def _generate_trajectory(result):
     """Generate trajectory data for visualization"""
-    # This would be populated during simulation
-    # For now, return summary data
     person = result['person']
+    base_world = result.get('base_world', {})
+    country = result.get('country', {})
+    city = result.get('city', {})
     
     return {
-        'final_age': person['age'],
-        'final_wealth': person['wealth'],
-        'final_income': person['income'],
-        'final_education': person['education_level'],
-        'final_health': person['health'],
-        'final_stress': person['stress'],
-        'total_events': len(result['events'])
+        'final_age': person.get('age', 0),
+        'final_wealth': person.get('wealth', 0),
+        'final_income': person.get('income', 0),
+        'final_education': person.get('education_level', 0),
+        'final_health': person.get('health', 0),
+        'final_stress': person.get('stress', 0),
+        'total_events': len(result.get('events', [])),
+        'kondratiev_effect': base_world.get('kondratiev_phase', 0),
+        'economic_cycle': base_world.get('economic_cycle', 0),
+        'tech_level': base_world.get('tech_level', 0),
+        'era': country.get('era', 'N/A'),
+        'city_name': city.get('city_name', 'N/A')
     }
 
 

@@ -20,7 +20,7 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual environments
+# Virtual Environment
 venv/
 env/
 ENV/
@@ -32,6 +32,10 @@ ENV/
 *.swo
 *~
 
+# Flask
+instance/
+.webassets-cache
+
 # Output files
 output/*.json
 !output/.gitkeep
@@ -40,8 +44,5 @@ output/*.json
 .DS_Store
 Thumbs.db
 
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-
+# Logs
+*.log

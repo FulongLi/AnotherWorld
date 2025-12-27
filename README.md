@@ -90,6 +90,22 @@ AnotherWorld/
 
 **See [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md) for detailed structure overview.**
 
+## Web Interface
+
+The project includes a web interface for interactive simulation:
+
+```bash
+# Install dependencies (including Flask)
+pip install -r requirements.txt
+
+# Start the web server
+python app.py
+
+# Open browser to http://localhost:5000
+```
+
+**See [README_WEB.md](README_WEB.md) for detailed web interface documentation.**
+
 ## Core Concepts
 
 ### Birth Profile (Immutable)

@@ -95,13 +95,20 @@ function displayResults(result) {
     // Display events
     const eventsList = document.getElementById('eventsList');
     if (result.events && result.events.length > 0) {
-        eventsList.innerHTML = result.events.map(event => `
-            <div class="event-item">
-                <div class="event-year">${event.year}年 (${event.age}岁)</div>
-                <h4>${event.title || '人生事件'}</h4>
-                <div class="event-description">${event.description || '无描述'}</div>
-            </div>
-        `).join('');
+        eventsList.innerHTML = result.events.map(event => {
+            const year = event.year || 'N/A';
+            const age = event.age || 'N/A';
+            const title = event.title || '人生事件';
+            const description = event.description || '无描述';
+            const category = event.category || 'milestone';
+            return `
+                <div class="event-item">
+                    <div class="event-year">${year}年 (${age}岁) - ${category}</div>
+                    <h4>${title}</h4>
+                    <div class="event-description">${description}</div>
+                </div>
+            `;
+        }).join('');
     } else {
         eventsList.innerHTML = '<p>本次模拟中未记录重大事件。</p>';
     }
